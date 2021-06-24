@@ -12,12 +12,12 @@ import s from './MovieDetailsPage.module.css';
 import { getMovieDetails } from '../service/tmdbAPI';
 import MovieDetails from '../components/MovieDetails';
 
-const Cast = lazy(() => import('../Cast/Cast' /* webpackChunkName: "cast" */));
-const Reviews = lazy(() =>
-  import('../Reviews/Reviews' /* webpackChunkName: "reviews" */),
-);
+// const Cast = lazy(() => import('../Cast/Cast' /* webpackChunkName: "cast" */));
+// const Reviews = lazy(() =>
+//   import('../Reviews/Reviews' /* webpackChunkName: "reviews" */),
+// );
 
-export default function MovieDetailsView() {
+export default function MovieDetailsPage() {
   const [movie, setMovie] = useState([]);
 
   const { movieId } = useParams();
@@ -48,7 +48,7 @@ export default function MovieDetailsView() {
         </NavLink>
       </nav>
 
-      <Suspense fallback={<Loader timeout={10000} color="#ff0000" />}>
+      {/* <Suspense fallback={<Loader timeout={10000} color="#ff0000" />}>
         <Switch>
           <Route path={`${url}/cast`}>
             <Cast movieId={movieId} />
@@ -58,7 +58,7 @@ export default function MovieDetailsView() {
             <Reviews movieId={movieId} />
           </Route>
         </Switch>
-      </Suspense>
+      </Suspense> */}
     </>
   );
 }
