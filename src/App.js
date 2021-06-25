@@ -5,9 +5,12 @@ import React from 'react';
 import { Route, NavLink, Switch } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 //import AuthorsView from './views/AuthorsView';
-import SearchMovie from './pages/SearchMovie';
+import SearchMovie from './components/SearchBar';
 //import NotFoundView from './views/NotFoundView';
 import MovieDetailsPage from './pages/MovieDetailsPage';
+
+
+
 
 const App = () => (
   <>

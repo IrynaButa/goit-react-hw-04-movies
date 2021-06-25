@@ -12,16 +12,18 @@ import s from './MovieDetailsPage.module.css';
 import { getMovieDetails } from '../service/tmdbAPI';
 import MovieDetails from '../components/MovieDetails';
 
-// const Cast = lazy(() => import('../Cast/Cast' /* webpackChunkName: "cast" */));
-// const Reviews = lazy(() =>
-//   import('../Reviews/Reviews' /* webpackChunkName: "reviews" */),
-// );
+const Cast = lazy(() => import('./Cast' /* webpackChunkName: "cast" */));
+const Reviews = lazy(() =>
+  import('./Reviews' /* webpackChunkName: "reviews" */),
+);
 
-export default function MovieDetailsPage() {
+
+
+function MovieDetailsPage() {
   const [movie, setMovie] = useState([]);
 
   const { movieId } = useParams();
-  const { url } = useRouteMatch();
+  const { url, path } = useRouteMatch();
 
   useEffect(() => {
     getMovieDetails(movieId).then(setMovie);
@@ -31,34 +33,40 @@ export default function MovieDetailsPage() {
     <>
       <MovieDetails {...movie} />
 
-      <nav className={s.nav}>
-        <NavLink
-          to={`${url}/cast`}
-          className={s.link}
-          activeClassName={s.active}
-        >
-          Cast
-        </NavLink>
-        <NavLink
-          to={`${url}/reviews`}
-          className={s.link}
-          activeClassName={s.active}
-        >
-          Reviews
-        </NavLink>
-      </nav>
+       <ul className={s.nav}>
+            <li>
+              <NavLink
+                to={`${url}/cast`}
+                className={s.link}
+                activeClassName={s.activeLink}
+              >
+                Cast
+              </NavLink>
+            </li>
 
-      {/* <Suspense fallback={<Loader timeout={10000} color="#ff0000" />}>
-        <Switch>
-          <Route path={`${url}/cast`}>
+            <li>
+              <NavLink
+                to={`${url}/reviews`}
+                className={s.link}
+                activeClassName={s.activeLink}
+              >
+                Reviews
+              </NavLink>
+            </li>
+          </ul>
+
+          <Suspense fallback={<Loader />}>
+           
+          <Route path={`${path}/cast`}>
             <Cast movieId={movieId} />
           </Route>
 
-          <Route path={`${url}/reviews`}>
+          <Route path={`${path}/reviews`}>
             <Reviews movieId={movieId} />
           </Route>
-        </Switch>
-      </Suspense> */}
+        
+          </Suspense>
     </>
   );
 }
+export default MovieDetailsPage;

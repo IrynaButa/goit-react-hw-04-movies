@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import styles from "./SearchBar.module.css";
 
 
-class SearchMovie extends Component {
+class SearchBar extends Component {
     state = {
         query: ''
     }
@@ -45,4 +45,4 @@ class SearchMovie extends Component {
 
 }
 
-export default SearchMovie;
+export default SearchBar;
