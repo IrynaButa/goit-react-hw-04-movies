@@ -1,48 +1,50 @@
 
-import './App.css';
+import { lazy, Suspense } from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import Navigation from './components/Navigation';
+import Container from './components/Container';
+import Loader from './components/Loader';
 
-import React from 'react';
-import { Route, NavLink, Switch } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-//import AuthorsView from './views/AuthorsView';
-import MoviePage from './pages/MoviePage';
-//import NotFoundView from './views/NotFoundView';
-import MovieDetailsPage from './pages/MovieDetailsPage';
-
-
-
-
-const App = () => (
-  <>
-    <ul>
-      <li>
-        <NavLink
-          exact
-          to="/"
-          className="NavLink"
-          activeClassName="NavLink--active"
-        >
-          Home
-        </NavLink>
-      </li>
-      <li>
-        <NavLink
-          to="/movies"
-          className="NavLink"
-          activeClassName="NavLink--active"
-        >
-          Movies
-        </NavLink>
-      </li>
-    </ul>
-
-    <Switch>
-      <Route exact path="/" component={HomePage} />
-      <Route exact path="/movies" component={MoviePage} />
-      <Route path="/movies/:movieId" component={MovieDetailsPage} />
-      {/* <Route component={NotFoundView} /> */}
-    </Switch>
-  </>
+const HomePage = lazy(() =>
+  import('./pages/HomePage' /* webpackChunkName: "home-view" */),
 );
 
+const MoviesPage = lazy(() =>
+  import('./pages/MoviePage' /* webpackChunkName: "home-view" */),
+);
+
+const MovieDetailsPage = lazy(() =>
+  import(
+    './pages/MovieDetailsPage' /* webpackChunkName: "movies-details-view" */
+  ),
+);
+
+function App() {
+  return (
+    <Container>
+      <Navigation />
+
+      <Suspense fallback={<Loader />} >
+        <Switch>
+          <Route path="/" exact>
+            <HomePage />
+          </Route>
+
+          <Route path="/movies" exact>
+            <MoviesPage />
+          </Route>
+
+          <Route path="/movies/:movieId">
+            <MovieDetailsPage />
+          </Route>
+
+          <Redirect to="/" />
+        </Switch>
+      </Suspense>
+
+      <ToastContainer autoClose={3700} position="bottom-center" />
+    </Container>
+  );
+}
 export default App;

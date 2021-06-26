@@ -1,38 +1,61 @@
-import React, { Component } from 'react';
-//import { NavLink } from 'react-router-dom';
-//import Axios from 'axios';
-import { getTrending } from '../service/tmdbAPI';
-import MovieList  from '../components/MovieList';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import * as apiService from '../service/tmdbAPI';
+import Loader from '../components/Loader';
+import Status from '../service/status';
+//import ErrorView from '../../components/ErrorView/ErrorView';
+import noImageFound from '../logo.svg';
+import s from './HomePage.module.css';
 
-import s from '../components/MovieList.module.css'
+function HomePage() {
+  const [movies, setMovies] = useState(null);
+  const [error, setError] = useState(null);
+  const [status, setStatus] = useState(Status.IDLE);
 
-class HomePage extends Component {
-	state = {
-		trends: [],
-		isLoading: false,
-		error: null,
-	};
+  useEffect(() => {
+    setStatus(Status.PENDING);
+    apiService
+      .getTrending()
+      .then(({ results }) => {
+        setMovies(results);
+        setStatus(Status.RESOLVED);
+      })
+      .catch(error => {
+        console.log(error);
+        setError('Something went wrong. Try again.');
+        setStatus(Status.REJECTED);
+      });
+  }, []);
 
-	componentDidMount() {
-		this.setState({ isLoading: true, error: null });
-		getTrending()
-			.then(trends => this.setState({ trends }))
-			.catch(error => this.setState({ error }))
-			.finally(() => this.setState({ isLoading: false }));
-	}
+  return (
+    <main className={s.main}>
+      <h1 className={s.title}>Trending today</h1>
 
-	render() {
-		const { trends, isLoading, error } = this.state;
+      {status === Status.PENDING && <Loader />}
 
-		return (
-			<div className="container">
-				<h1>Trends</h1>
-				{error && <p style={{ color: 'red' }}>{error.message}</p>}
-                {trends.length &&
-                    <MovieList movies={trends} />}
-				{/* {isLoading && <Loader />} */}
-			</div>
-		);
-	}
+      {/* {status === Status.REJECTED && <ErrorView message={error.message} />}  */}
+
+      {status === Status.RESOLVED && (
+        <ul className={s.moviesList}>
+          {movies.map(movie => (
+            <li key={movie.id} className={s.moviesItem}>
+              <Link to={`movies/${movie.id}`}>
+                <img
+                  src={
+                    movie.poster_path
+                      ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
+                      : noImageFound
+                  }
+                  alt={movie.title}
+                  className={s.poster}
+                />
+              </Link>
+              <p className={s.movieTitle}>{movie.title}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </main>
+  );
 }
 export default HomePage;

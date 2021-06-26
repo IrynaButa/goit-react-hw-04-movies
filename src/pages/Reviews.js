@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getMovieReviews} from '../service/tmdbAPI';
+import * as apiService from '../service/tmdbAPI';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Status from '../service/status';
@@ -14,28 +14,23 @@ function Reviews() {
   const [error, setError] = useState(null);
   const [status, setStatus] = useState(Status.IDLE);
 
-//   useEffect(() => {
-//     getMovieReviews(movieId)
-//       .then(({ results, total_pages }) => {
-//         if (results.length === 0) {
-//           toast.error("💩 We don't have any reviews for this movie.");
-//           setStatus(Status.IDLE);
-    useEffect(() => {
-    getMovieReviews(movieId).then(setReviews);
+  useEffect(() => {
+    apiService
+      .getMovieReviews(movieId)
+      .then(({ results, total_pages }) => {
+        if (results.length === 0) {
+          toast.error("💩 We don't have any reviews for this movie.");
+          setStatus(Status.IDLE);
+          return;
+        }
+        setReviews(results);
+        setStatus(Status.RESOLVED);
+      })
+      .catch(error => {
+        setError('Something went wrong. Try again.');
+        setStatus(Status.REJECTED);
+      });
   }, [movieId]);
-
-//   return (
-//     <>
-//           return;
-//         }
-//         setReviews(results);
-//         setStatus(Status.RESOLVED);
-//       })
-//       .catch(error => {
-//         setError('Something went wrong. Try again.');
-//         setStatus(Status.REJECTED);
-//       });
-//   }, [movieId]);
 
   return (
     <>

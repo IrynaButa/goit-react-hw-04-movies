@@ -1,30 +1,35 @@
-import axios from 'axios';
+
 
 const BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = '485d9041c92ec8ba4800b24ef3f52471';
 
-axios.defaults.baseURL = BASE_URL;
-axios.defaults.params = { api_key: API_KEY, language: 'en-EN' };
+async function apiService(url = '', config = {}) {
+  const response = await fetch(url, config);
+  return response.ok
+    ? await response.json()
+    : Promise.reject(
+        new Error('404 The resource you requested could not be found 🥺'),
+      );
+}
 
+export function getTrending() {
+  return apiService(`${BASE_URL}/trending/movie/day?api_key=${API_KEY}`);
+}
 
-export const getTrending = () => {
-	return axios.get('/trending/movie/week').then(res => res.data.results);
-};
+export function searchMovies(query) {
+  return apiService(
+    `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}`,
+  );
+}
 
-export const getMovieDetails = movieId => {
-	return axios.get(`/movie/${movieId}`).then(res => res.data);
-};
+export function getMovieDetails(movieId) {
+  return apiService(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}`);
+}
 
-export const getMovieCredits = movieId => {
-	return axios.get(`/movie/${movieId}/credits`).then(res => res.data.cast);
-};
+export function getMovieCredits(movieId) {
+  return apiService(`${BASE_URL}/movie/${movieId}/credits?api_key=${API_KEY}`);
+}
 
-export const getMovieReviews = movieId => {
-	return axios.get(`/movie/${movieId}/reviews`).then(res => res.data.results);
-};
-
-export const searchMovies = query => {
-	return axios
-		.get(`/search/movie?query=${query}`)
-		.then(res => res.data.results);
-};
+export function getMovieReviews(movieId) {
+  return apiService(`${BASE_URL}/movie/${movieId}/reviews?api_key=${API_KEY}`);
+}
