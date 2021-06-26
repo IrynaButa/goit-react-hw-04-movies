@@ -2,7 +2,7 @@ import React, { Component} from "react";
 import { Link} from 'react-router-dom';
 //import PropTypes from "prop-types";
 import s from "./MovieDetails.module.css";
-import { searchMovies} from '../service/tmdbAPI';
+import { searchMovies} from '../../service/tmdbAPI';
 //import ImageItem from "./ImageItem";
 import noImageFound from '../logo.svg';
 

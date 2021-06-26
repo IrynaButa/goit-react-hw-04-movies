@@ -1,17 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import * as apiService from '../service/tmdbAPI';
+import * as apiService from '../../service/tmdbAPI';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Status from '../service/status';
-//import Loader from '../../components/Loader/Loader';
-//import ErrorView from '../../components/ErrorView/ErrorView';
+import Status from '../../service/status';
+import Loader from '../../components/Loader/Loader';
 import s from './Reviews.module.css';
 
 function Reviews() {
   const { movieId } = useParams();
   const [reviews, setReviews] = useState(null);
-  const [error, setError] = useState(null);
   const [status, setStatus] = useState(Status.IDLE);
 
   useEffect(() => {
@@ -19,7 +17,7 @@ function Reviews() {
       .getMovieReviews(movieId)
       .then(({ results, total_pages }) => {
         if (results.length === 0) {
-          toast.error("💩 We don't have any reviews for this movie.");
+          toast.error("Sorry. We don't have any reviews for this movie.");
           setStatus(Status.IDLE);
           return;
         }
@@ -27,17 +25,14 @@ function Reviews() {
         setStatus(Status.RESOLVED);
       })
       .catch(error => {
-        setError('Something went wrong. Try again.');
+        toast.error('Something went wrong. Try again.');
         setStatus(Status.REJECTED);
       });
   }, [movieId]);
 
   return (
     <>
-      {/* {status === Status.PENDING && <Loader />}
-
-      {status === Status.REJECTED && <ErrorView message={error} />} */}
-
+       {status === Status.PENDING && <Loader />}
       {status === Status.RESOLVED && (
         <>
           <ul>

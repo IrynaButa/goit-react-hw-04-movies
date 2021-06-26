@@ -1,17 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import * as apiService from '../service/tmdbAPI';
-import Status from '../service/status';
-//import Loader from '../../components/Loader/Loader';
-//import ErrorView from '../../components/ErrorView/ErrorView';
-import noImageFound from '../../src/logo.svg';
+import * as apiService from '../../service/tmdbAPI';
+import Status from '../../service/status';
+import Loader from '../../components/Loader/Loader';
+import noImageFound from '../../logo.svg';
 import s from './Cast.module.css';
 
 function Cast() {
   const { movieId } = useParams();
   const [authors, setAuthors] = useState(null);
-  const [error, setError] = useState(null);
   const [status, setStatus] = useState(Status.IDLE);
 
   useEffect(() => {
@@ -19,7 +17,7 @@ function Cast() {
       .getMovieCredits(movieId)
       .then(({ cast }) => {
         if (cast.length === 0) {
-          toast.error('💩 No results!');
+          toast.error('Oops.. No results!');
           setStatus(Status.IDLE);
           return;
         }
@@ -27,8 +25,7 @@ function Cast() {
         setStatus(Status.RESOLVED);
       })
       .catch(error => {
-        console.log(error);
-        setError('Something went wrong. Try again.');
+        toast.error('Something went wrong. Try again.');
         setStatus(Status.REJECTED);
       });
   }, [movieId]);
@@ -36,8 +33,6 @@ function Cast() {
   return (
     <>
       {status === Status.PENDING && <Loader />}
-
-      {status === Status.REJECTED && <ErrorView message={error} />}
 
       {status === Status.RESOLVED && (
         <ul className={s.cast}>

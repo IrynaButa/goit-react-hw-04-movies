@@ -1,25 +1,24 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { NavLink, useRouteMatch, useParams, Route } from 'react-router-dom';
-import * as apiService from '../service/tmdbAPI';
-import Loader from '../components/Loader';
-import Status from '../service/status';
-//import ErrorView from '../../components/ErrorView/ErrorView';
-import noImageFound from '../logo.svg';
+import { toast } from 'react-toastify';
+import * as apiService from '../../service/tmdbAPI';
+import Loader from '../../components/Loader/Loader';
+import Status from '../../service/status';
+import noImageFound from '../../logo.svg';
 import s from './MovieDetailsPage.module.css';
 
 const Cast = lazy(() =>
-  import('./Cast' /* webpackChunkName: "cast-subview"*/),
+  import('../Cast/Cast' /* webpackChunkName: "cast-subview"*/),
 );
 
 const Reviews = lazy(() =>
-  import('./Reviews' /* webpackChunkName: "reviews-subview"*/),
+  import('../Reviews/Reviews' /* webpackChunkName: "reviews-subview"*/),
 );
 
 function MovieDetailsPage() {
   const { movieId } = useParams();
   const { url, path } = useRouteMatch();
   const [movie, setMovie] = useState(null);
-  const [error, setError] = useState(null);
   const [status, setStatus] = useState(Status.IDLE);
 
   useEffect(() => {
@@ -35,11 +34,10 @@ function MovieDetailsPage() {
           overview,
           genres,
         });
-        setStatus(Status.RESOLVED);
+        setStatus('resolved');
       })
       .catch(error => {
-        console.log(error);
-        setError(error.message);
+        toast.error('Something went wrong. Try again.');
         setStatus(Status.REJECTED);
       });
   }, [movieId]);
@@ -47,8 +45,6 @@ function MovieDetailsPage() {
   return (
     <main className={s.main}>
        {status === Status.PENDING && <Loader />}
-
-      {/*{status === Status.REJECTED && <ErrorView message={error} />} */}
 
       {status === Status.RESOLVED && (
         <>

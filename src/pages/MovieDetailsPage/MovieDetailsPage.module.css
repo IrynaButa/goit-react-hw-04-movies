@@ -1,0 +1,86 @@
+.main {
+  padding: 40px 0;
+  text-align: left;
+}
+
+.wrapper {
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .wrapper {
+    display: flex;
+  }
+}
+
+.poster {
+  max-width: 426px;
+  height: 480px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+@media screen and (min-width: 768px) {
+  .poster {
+    margin-right: 30px;
+    margin-bottom: 0;
+  }
+}
+
+.description {
+  text-align: left;
+}
+
+.movieTitle {
+  margin-bottom: 20px;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1.1667;
+  letter-spacing: 0.03em;
+  text-align: center;
+  color: #3f51b5;
+}
+
+@media screen and (min-width: 768px) {
+  .movieTitle {
+    text-align: left;
+  }
+}
+
+.info {
+  margin-bottom: 30px;
+  font-size: 18px;
+  color: #555;
+}
+
+.genre {
+  composes: info;
+  list-style: inside;
+}
+
+.title {
+  font-family: 'Bangers', sans-serif;
+  letter-spacing: 0.2em;
+  color: black;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
+  padding: 20px 40px;
+  border-top: 2px solid black;
+}
+
+.link {
+  margin-right: 24px;
+  font-weight: 500;
+  font-size: 18px;
+  color: #3f51b5;
+}
+
+.activeLink {
+  composes: link;
+  color: #d87f19;
+}
+

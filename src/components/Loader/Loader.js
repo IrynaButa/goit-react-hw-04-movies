@@ -6,7 +6,7 @@ function Loader() {
   return (
     <div className={s.overlay}>
       <RactLoader
-        type="Grid"
+        type="Hearts"
         color="#3f51b5"
         height={100}
         width={100}

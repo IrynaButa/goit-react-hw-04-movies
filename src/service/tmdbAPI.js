@@ -8,7 +8,7 @@ async function apiService(url = '', config = {}) {
   return response.ok
     ? await response.json()
     : Promise.reject(
-        new Error('404 The resource you requested could not be found 🥺'),
+        new Error('404 The resource you requested could not be found'),
       );
 }
 

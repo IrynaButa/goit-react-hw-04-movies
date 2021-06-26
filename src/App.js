@@ -2,21 +2,21 @@
 import { lazy, Suspense } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import Navigation from './components/Navigation';
-import Container from './components/Container';
-import Loader from './components/Loader';
+import Navigation from './components/Navigation/Navigation';
+import Container from './components/Container/Container';
+import Loader from './components/Loader/Loader';
 
 const HomePage = lazy(() =>
-  import('./pages/HomePage' /* webpackChunkName: "home-view" */),
+  import('./pages/HomePage/HomePage' /* webpackChunkName: "home-view" */),
 );
 
 const MoviesPage = lazy(() =>
-  import('./pages/MoviePage' /* webpackChunkName: "home-view" */),
+  import('./pages/MoviePage/MoviePage' /* webpackChunkName: "home-view" */),
 );
 
 const MovieDetailsPage = lazy(() =>
   import(
-    './pages/MovieDetailsPage' /* webpackChunkName: "movies-details-view" */
+    './pages/MovieDetailsPage/MovieDetailsPage' /* webpackChunkName: "movies-details-view" */
   ),
 );
 

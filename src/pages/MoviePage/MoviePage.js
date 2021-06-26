@@ -1,45 +1,64 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import * as apiService from '../service/tmdbAPI';
-import Loader from '../components/Loader';
-import Status from '../service/status';
-//import ErrorView from '../../components/ErrorView/ErrorView';
-import noImageFound from '../logo.svg';
-import s from './HomePage.module.css';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import * as apiService from '../../service/tmdbAPI';
+import Loader from '../../components/Loader/Loader';
+import Status from '../../service/status';
+import noImageFound from '../../logo.svg';
+import SearchBar from '../../components/SearchBar/SearchBar';
+import s from './MoviesPage.module.css';
 
-function HomePage() {
+function MoviesPage() {
+  const { url } = useRouteMatch();
+  const [query, setQuery] = useState('');
   const [movies, setMovies] = useState(null);
-  const [error, setError] = useState(null);
   const [status, setStatus] = useState(Status.IDLE);
 
   useEffect(() => {
+    if (!query) {
+      return;
+    }
+
     setStatus(Status.PENDING);
     apiService
-      .getTrending()
+      .searchMovies(query)
       .then(({ results }) => {
+        if (results.length === 0) {
+           toast.error(`No results were found for ${query}!`);
+          setStatus(Status.REJECTED);
+          return;
+        }
+
         setMovies(results);
         setStatus(Status.RESOLVED);
       })
       .catch(error => {
-        console.log(error);
-        setError('Something went wrong. Try again.');
+        toast.error('Something went wrong. Try again.');
         setStatus(Status.REJECTED);
       });
-  }, []);
+  }, [query]);
+
+  const searchMovies = newSearch => {
+    if (query === newSearch) {
+      return;
+    }
+
+    setQuery(newSearch);
+    setMovies(null);
+    setStatus(Status.IDLE);
+  };
 
   return (
     <main className={s.main}>
-      <h1 className={s.title}>Trending today</h1>
+      <SearchBar onSubmit={searchMovies} />
 
       {status === Status.PENDING && <Loader />}
-
-      {/* {status === Status.REJECTED && <ErrorView message={error.message} />}  */}
-
+      
       {status === Status.RESOLVED && (
         <ul className={s.moviesList}>
           {movies.map(movie => (
             <li key={movie.id} className={s.moviesItem}>
-              <Link to={`movies/${movie.id}`}>
+              <Link to={`${url}/${movie.id}`}>
                 <img
                   src={
                     movie.poster_path
@@ -58,4 +77,4 @@ function HomePage() {
     </main>
   );
 }
-export default HomePage;
+export default MoviesPage;
